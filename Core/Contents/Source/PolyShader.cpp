@@ -86,7 +86,9 @@ ShaderBinding::ShaderBinding(Shader *shader) {
 }
 
 ShaderBinding::~ShaderBinding() {
+	
 	for(int i=0; i < localParams.size(); i++) {
+		delete localParams[i]->data;
 		delete localParams[i];
 	}	
 	for(int i=0; i < renderTargetBindings.size(); i++) {

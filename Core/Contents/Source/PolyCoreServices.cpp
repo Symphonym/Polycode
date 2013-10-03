@@ -138,6 +138,9 @@ CoreServices::~CoreServices() {
 	delete resourceManager;
 	delete soundManager;
 	delete fontManager;
+	delete logger;
+	delete config;
+	delete renderer;
 	instanceMap.clear();
 	overrideInstance = NULL;
 	
