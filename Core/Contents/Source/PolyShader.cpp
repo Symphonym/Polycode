@@ -88,7 +88,9 @@ ShaderBinding::ShaderBinding(Shader *shader) {
 ShaderBinding::~ShaderBinding() {
 	
 	for(int i=0; i < localParams.size(); i++) {
-		delete localParams[i]->data;
+		if(localParams[i]->ownsData)
+			delete localParams[i]->data;
+
 		delete localParams[i];
 	}	
 	for(int i=0; i < renderTargetBindings.size(); i++) {
@@ -122,6 +124,7 @@ LocalShaderParam *ShaderBinding::getLocalParamByName(const String& name) {
 LocalShaderParam *ShaderBinding::addLocalParam(const String& name, void *ptr) {
 	LocalShaderParam *newParam = new LocalShaderParam();
 	newParam->name = name;
+	newParam->ownsData = false;
 	newParam->data = ptr;
 	localParams.push_back(newParam);
 	return newParam;
@@ -131,6 +134,7 @@ LocalShaderParam * ShaderBinding::addParam(int type, const String& name) {
 	void *defaultData = ProgramParam::createParamData(type);
 	LocalShaderParam *newParam = new LocalShaderParam();
 	newParam->data = defaultData;
+	newParam->ownsData = true;
 	newParam->name = name;
 	localParams.push_back(newParam);
 	return newParam;
