@@ -57,9 +57,9 @@ void Material::clearShaders() {
 	}
 	*/
 	
-	//for(int i=0; i < materialShaders.size(); i++)	{
-	//	materialShaders[i]->removeAllHandlersForListener(this);
-	//}	
+	for(int i=0; i < materialShaders.size(); i++)	{
+		materialShaders[i]->removeAllHandlersForListener(this);
+	}	
 	materialShaders.clear();
 
 	for(int i=0; i < shaderBindings.size(); i++)	{
