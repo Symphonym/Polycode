@@ -146,6 +146,7 @@ SET(polycore_HDRS
     Include/PolySceneSound.h
     Include/PolyShader.h
     Include/PolySkeleton.h
+    Include/PolySmartPtr.h
     Include/PolySound.h
     Include/PolySoundManager.h
     Include/PolyString.h
