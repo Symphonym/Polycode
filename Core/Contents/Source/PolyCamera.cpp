@@ -50,12 +50,7 @@ Camera::Camera(Scene *parentScene) : Entity() {
 }
 
 Camera::~Camera() {	
-	for(int i=0; i < localShaderOptions.size(); i++) {
-		delete localShaderOptions[i];
-	}
-
-	delete originalSceneTexture;
-	delete zBufferSceneTexture;
+	localShaderOptions.clear();
 }
 
 void Camera::setClippingPlanes(Number nearClipPlane, Number farClipPlane) {
@@ -68,7 +63,7 @@ void Camera::setExposureLevel(Number level) {
 	exposureLevel = level;
 }
 
-Number Camera::getExposureLevel() {
+Number Camera::getExposureLevel() const {
 	return exposureLevel;
 }
 
@@ -77,12 +72,12 @@ void Camera::setFOV(Number fov) {
 	this->fov = fov;
 }
 
-Number Camera::getFOV() {
+Number Camera::getFOV() const {
 	return fov;
 }
 
 
-bool Camera::isSphereInFrustum(Vector3 pos, Number fRadius) {
+bool Camera::isSphereInFrustum(Vector3 pos, Number fRadius) const {
 	if(!frustumCulling)
 		return true;
     for( int i = 0; i < 6; ++i )
@@ -108,15 +103,15 @@ void Camera::setOrthoMode(bool mode, Number orthoSizeX, Number orthoSizeY) {
 	orthoMode = mode;
 }			
 
-bool Camera::getOrthoMode() {
+bool Camera::getOrthoMode() const {
 	return orthoMode;
 }
 
-Number Camera::getOrthoSizeX() {
+Number Camera::getOrthoSizeX() const {
 	return orthoSizeX;
 }
 
-Number Camera::getOrthoSizeY() {
+Number Camera::getOrthoSizeY() const {
 	return orthoSizeY;
 }
 
@@ -267,7 +262,7 @@ void Camera::buildFrustumPlanes() {
 
 }
 
-bool Camera::canSee(Entity *entity) {
+bool Camera::canSee(Entity *entity) const {
 	return isSphereInFrustum(entity->getPosition(), entity->getBBoxRadius());
 }
 
@@ -296,11 +291,11 @@ void Camera::setPostFilter(Material *shaderMaterial) {
 		
 	this->filterShaderMaterial = shaderMaterial;
 	if(!originalSceneTexture) {
-		renderer->createRenderTextures(&originalSceneTexture, &zBufferSceneTexture, CoreServices::getInstance()->getCore()->getXRes(), CoreServices::getInstance()->getCore()->getYRes(), shaderMaterial->fp16RenderTargets);
+		renderer->createRenderTextures(&originalSceneTexture.getPtr(), &zBufferSceneTexture.getPtr(), CoreServices::getInstance()->getCore()->getXRes(), CoreServices::getInstance()->getCore()->getYRes(), shaderMaterial->fp16RenderTargets);
 	}
 	
 	for(int i=0; i < shaderMaterial->getNumShaders(); i++) {
-		ShaderBinding* binding = shaderMaterial->getShader(i)->createBinding();		
+		SmartPtr<ShaderBinding> binding(shaderMaterial->getShader(i)->createBinding(), "ShaderBinding");
 		localShaderOptions.push_back(binding);
 		binding->addLocalParam("exposure", (void*)&exposureLevel);				
 	}
@@ -308,7 +303,7 @@ void Camera::setPostFilter(Material *shaderMaterial) {
 	_hasFilterShader = true;
 }
 
-bool Camera::hasFilterShader() {
+bool Camera::hasFilterShader() const {
 	return _hasFilterShader;
 }
 
@@ -332,8 +327,8 @@ void Camera::drawFilter(Texture *targetTexture, Number targetTextureWidth, Numbe
 		finalTargetZTexture = targetZTexture;		
 		renderer->setViewportSize(targetTextureWidth, targetTextureHeight);		
 	} else {
-		finalTargetColorTexture = originalSceneTexture;
-		finalTargetZTexture = zBufferSceneTexture;	
+		finalTargetColorTexture = originalSceneTexture.get();
+		finalTargetZTexture = zBufferSceneTexture.get();	
 		renderer->setViewportSize(renderer->getXRes(), renderer->getYRes());
 	}
 	renderer->bindFrameBufferTexture(finalTargetColorTexture);
@@ -358,7 +353,7 @@ void Camera::drawFilter(Texture *targetTexture, Number targetTextureWidth, Numbe
 			materialBinding->addTexture(depthBinding->name, finalTargetZTexture);
 		}
 		
-		renderer->applyMaterial(filterShaderMaterial, localShaderOptions[i], i);		
+		renderer->applyMaterial(filterShaderMaterial, localShaderOptions[i].get(), i);		
 		if(i==filterShaderMaterial->getNumShaders()-1) {
 				if(targetTexture) {
 					renderer->setViewportSize(targetTextureWidth, targetTextureHeight);	
@@ -390,7 +385,7 @@ void Camera::drawFilter(Texture *targetTexture, Number targetTextureWidth, Numbe
 	}
 }
 
-Matrix4 Camera::getProjectionMatrix() {
+Matrix4 Camera::getProjectionMatrix() const {
 	return projectionMatrix;
 }
 

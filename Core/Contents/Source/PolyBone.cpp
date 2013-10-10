@@ -39,7 +39,6 @@ Bone::Bone(const String& boneName) : Entity() {
 	
 	boneMesh = make_smart(new Mesh(Mesh::QUAD_MESH), "Bone Mesh");
 	boneMesh->createBox(0.2,0.2,0.2);
-	
 }
 
 
@@ -59,7 +58,7 @@ Bone* Bone::getParentBone() {
 	return parentBone;
 }
 
-int Bone::getNumChildBones() {
+int Bone::getNumChildBones() const {
 	return childBones.size();
 }
 

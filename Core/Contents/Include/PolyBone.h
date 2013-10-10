@@ -37,6 +37,7 @@ namespace Polycode {
 	*/			
 	class _PolyExport Bone : public Entity {
 		public:
+
 			/** 
 			* Constructor.
 			* @param boneName Name of the bone.
@@ -44,6 +45,13 @@ namespace Polycode {
 			Bone(const String& boneName);
 			virtual ~Bone();
 			
+			/**
+			* Adds a visible label to the bone, displaying its name within the Scene.
+			* @param label Font name of a font that is registered within the FontManager
+			* @param size Text size, in pixels
+			* @param scale Size multiplier for the size of each pixel
+			* @param labelColor Color of the text
+			*/
 			void enableBoneLabel(const String& labelFont, Number size, Number scale, Color labelColor);
 			
 			/**
@@ -51,6 +59,7 @@ namespace Polycode {
 			* @return Name of the bone.
 			*/
 			const String& getName() const;
+
 			void Render();
 
 			/**
@@ -75,7 +84,7 @@ namespace Polycode {
 			* Returns the number of child bones of this bone.
 			* @return Number of child bones.
 			*/									
-			int getNumChildBones();
+			int getNumChildBones() const;
 			
 			/**
 			* Returns the child bone of this bone at the specified index.

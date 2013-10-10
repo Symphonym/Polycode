@@ -41,7 +41,7 @@ namespace Polycode {
 			void setOscillationTime(Number msTime);
 			/**
 			* Sets the amplitude of the sine wave, height between lowest and highest points
-			* @param amplitude Amplitude multiplier for the sine wave, is 1 by default.
+			* @param amplitude Amplitude multiplier for the sine wave, is 1000 by default.
 			*/
 			void setAmplitude(Number amplitude);
 			/**

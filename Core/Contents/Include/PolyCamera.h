@@ -25,6 +25,7 @@
 #include "PolyGlobals.h"
 #include "PolyEntity.h"
 #include "PolyVector2.h"
+#include "PolySmartPtr.h"
 
 namespace Polycode {
 
@@ -55,7 +56,7 @@ namespace Polycode {
 			* @return Returns true if the sphere is within the camera's frustum, or false if it isn't.
 			* @see canSee()
 			*/								
-			bool isSphereInFrustum(Vector3 pos, Number fRadius);
+			bool isSphereInFrustum(Vector3 pos, Number fRadius) const;
 		
 			/**
 			* Checks if the camera can see an entity based on its bounding radius.
@@ -63,7 +64,7 @@ namespace Polycode {
 			* @return Returns true if the entity's bounding radius is within the camera's frustum, or false if it isn't.
 			* @see isSphereInFrustum()
 			*/					
-			bool canSee(Entity *entity);
+			bool canSee(Entity *entity) const;
 			
 			/**
 			* Toggles orthographic projection mode for camera.
@@ -79,23 +80,23 @@ namespace Polycode {
 			* Returns true if camera is in orthographic projection mode.
 			* @return True if camera is orthographic, false if otherwise.
 			*/
-			bool getOrthoMode();
+			bool getOrthoMode() const;
 			
 			/**
 			* Returns the width of the camera's orthographic frustum.
 			* @return Width of the camera's orthographic frustum.
 			*/
-			Number getOrthoSizeX();
+			Number getOrthoSizeX() const;
 			
 			/**
 			* Returns the height of the camera's orthographic frustum.
 			* @return Height of the camera's orthographic frustum.
 			*/			
-			Number getOrthoSizeY();
+			Number getOrthoSizeY() const;
 						
 			/**
 			* Sets the field of view (FOV) for the camera. The larger the field of view, the more the camera can see, the smaller it is, the more zoomed in it is.
-			* @param fov The new FOV value.
+			* @param fov The new FOV value, default value is 45
 			*/			
 			void setFOV(Number fov);
 			
@@ -103,7 +104,7 @@ namespace Polycode {
 			* Returns the current FOV value for the camera.
 			* @return Current FOV value for the camera.
 			*/			
-			Number getFOV();
+			Number getFOV() const;
 			
 			void setClippingPlanes(Number nearClipPlane, Number farClipPlane);
 			
@@ -112,7 +113,7 @@ namespace Polycode {
 			void doCameraTransform();
 			void setLightDepthTexture(Texture *texture);			
 
-			bool hasFilterShader();
+			bool hasFilterShader() const;
 			void drawFilter(Texture *targetTexture = NULL, Number targetTextureWidth = 0.0, Number targetTextureHeight = 0.0, Texture *targetColorTexture = NULL, Texture *targetZTexture = NULL);
 			
 			/**
@@ -125,7 +126,7 @@ namespace Polycode {
 			* Returns the camera's exposure value.
 			* @return Current exposure value.
 			*/									
-			Number getExposureLevel();
+			Number getExposureLevel() const;
 
 			/**
 			* Sets the post-processing shader for the camera.
@@ -147,7 +148,7 @@ namespace Polycode {
 			/**
 			* Returns the local shader options for the camera post processing material.
 			*/
-			std::vector<ShaderBinding*> getLocalShaderOptions() { return localShaderOptions; }
+			std::vector<SmartPtr<ShaderBinding> > getLocalShaderOptions() { return localShaderOptions; }
 			
 			/**
 			* Returns the shader material applied to the camera.
@@ -155,7 +156,7 @@ namespace Polycode {
 			Material *getScreenShaderMaterial() { return filterShaderMaterial; }	
 			
 			
-			Matrix4 getProjectionMatrix();
+			Matrix4 getProjectionMatrix() const;
 			
 			/**
 			* Toggles the frustum culling of the camera. (Defaults to true).
@@ -186,9 +187,9 @@ namespace Polycode {
 			Scene *parentScene;
 
 			Material *filterShaderMaterial;			
-			Texture *originalSceneTexture;			
-			Texture *zBufferSceneTexture;
-			std::vector<ShaderBinding*> localShaderOptions;
+			SmartPtr<Texture> originalSceneTexture;			
+			SmartPtr<Texture> zBufferSceneTexture;
+			std::vector<SmartPtr<ShaderBinding> > localShaderOptions;
 			bool _hasFilterShader;
 	};	
 }

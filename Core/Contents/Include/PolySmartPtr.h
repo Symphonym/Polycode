@@ -68,6 +68,10 @@ namespace Polycode {
 				}
 			}
 
+			operator bool() const {
+				return pointer != NULL;
+			}
+
 			SmartPtr& operator = (const SmartPtr& rhPtr) {
 
 				if(pointer != rhPtr.pointer){
@@ -130,6 +134,7 @@ namespace Polycode {
 			}
 			/**
 			* Returns the name of the pointer, if given any
+			* @return Name of the pointer
 			*/	
 			String getName() const{
 				return name;
@@ -139,6 +144,14 @@ namespace Polycode {
 			* @return The underlying pointer
 			*/	
 			TType* get() const{
+				return pointer;
+			}
+
+			/**
+			* Gets direct access to the underlying pointer
+			* @return Reference to the underlying pointer
+			*/	
+			TType*& getPtr(){
 				return pointer;
 			}
 

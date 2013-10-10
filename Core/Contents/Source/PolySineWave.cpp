@@ -28,7 +28,7 @@
 
 namespace Polycode{
 
-	SineWave::SineWave() : oscillationTime(1), amplitude(1), frequency(1), wavePosition(0){
+	SineWave::SineWave() : oscillationTime(1000.f), amplitude(1), frequency(1), wavePosition(0){
 
 	}
 
@@ -72,7 +72,7 @@ namespace Polycode{
 		Number tempIndex = calculateSineIndex();
 
 		// Update wave position
-		wavePosition += CoreServices::getInstance()->getCore()->getElapsed()*getWaveEnd()*oscillationTime;
+		wavePosition += (CoreServices::getInstance()->getCore()->getElapsed()*0.001f)*getWaveEnd()*oscillationTime;
 
 		Number endOfWave = getWaveEnd();
 
