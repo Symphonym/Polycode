@@ -25,6 +25,7 @@
 #include "PolyVector3.h"
 #include "PolyVector2.h"
 #include "PolyColor.h"
+#include "PolySmartPtr.h"
 #include <vector>
 
 namespace Polycode {
@@ -190,7 +191,7 @@ namespace Polycode {
 				
 		protected:
 		
-			std::vector <BoneAssignment*> boneAssignments;
+			std::vector <SmartPtr<BoneAssignment> > boneAssignments;
 		
 	};
 }

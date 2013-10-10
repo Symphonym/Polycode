@@ -23,6 +23,7 @@
 #pragma once
 #include "PolyGlobals.h"
 #include "PolyString.h"
+#include "PolySmartPtr.h"
 #include "PolyMatrix4.h"
 #include "PolyEntity.h"
 
@@ -154,7 +155,7 @@ namespace Polycode {
 		
 		
 		protected:
-			Mesh *boneMesh;
+			SmartPtr<Mesh> boneMesh;
 		
 			Bone* parentBone;
 			std::vector<Bone*> childBones;

@@ -54,13 +54,13 @@ int Skeleton::getNumBones() const {
 Bone *Skeleton::getBoneByName(const String& name) const {
 	for(int i=0; i < bones.size(); i++) {
 		if(bones[i]->getName() == name)
-			return bones[i];
+			return bones[i].get();
 	}
 	return NULL;
 }
 
 Bone *Skeleton::getBone(int index) const {
-	return bones[index];
+	return bones[index].get();
 }
 
 void Skeleton::enableBoneLabels(const String& labelFont, Number size, Number scale, Color labelColor) {
@@ -80,7 +80,7 @@ void Skeleton::playAnimationByIndex(int index, bool once) {
 	if(index > animations.size()-1)
 		return;
 		
-	SkeletonAnimation *anim = animations[index];
+	SkeletonAnimation *anim = animations[index].get();
 	if(!anim)
 		return;
 	
@@ -112,7 +112,7 @@ void Skeleton::playAnimation(const String& animName, bool once) {
 SkeletonAnimation *Skeleton::getAnimation(const String& name) const {
 	for(int i=0; i < animations.size(); i++) {
 		if(animations[i]->getName() == name)
-			return animations[i];
+			return animations[i].get();
 	}
 	return NULL;
 }
@@ -130,9 +130,9 @@ void Skeleton::loadSkeleton(const String& fileName) {
 		return;
 	}
 	
-	bonesEntity	= new Entity();
+	bonesEntity	= make_smart(new Entity(), "Bone Entity");
 	bonesEntity->visible = false;
-	addChild(bonesEntity);
+	addChild(bonesEntity.get());
 	
 	unsigned int numBones;
 	float t[3],rq[4],s[3];
@@ -149,7 +149,7 @@ void Skeleton::loadSkeleton(const String& fileName) {
 		memset(buffer, 0, 1024);
 		OSBasics::read(buffer, 1, namelen, inFile);
 		
-		Bone *newBone = new Bone(String(buffer));
+		SmartPtr<Bone> newBone(new Bone(String(buffer)), "Skeleton Bone");
 		
 		OSBasics::read(&hasParent, sizeof(unsigned int), 1, inFile);
 		if(hasParent == 1) {
@@ -191,13 +191,13 @@ void Skeleton::loadSkeleton(const String& fileName) {
 	
 	for(int i=0; i < bones.size(); i++) {
 		if(bones[i]->parentBoneId != -1) {
-			parentBone = bones[bones[i]->parentBoneId];
-			parentBone->addChildBone(bones[i]);
+			parentBone = bones[bones[i]->parentBoneId].get();
+			parentBone->addChildBone(bones[i].get());
 			bones[i]->setParentBone(parentBone);
-			parentBone->addChild(bones[i]);			
+			parentBone->addChild(bones[i].get());			
 //			addEntity(bones[i]);										
 			
-			SceneLine *connector = new SceneLine(bones[i], parentBone);
+			SceneLine *connector = new SceneLine(bones[i].get(), parentBone);
 			connector->depthTest = false;
 			bonesEntity->addChild(connector);				
 			connector->setColor(((Number)(rand() % RAND_MAX)/(Number)RAND_MAX),((Number)(rand() % RAND_MAX)/(Number)RAND_MAX),((Number)(rand() % RAND_MAX)/(Number)RAND_MAX),1.0f);
@@ -205,7 +205,7 @@ void Skeleton::loadSkeleton(const String& fileName) {
 //			bProxy = new Entity();
 //			addEntity(bProxy);			
 //			bProxy->addEntity(bones[i]);
-			bonesEntity->addChild(bones[i]);
+			bonesEntity->addChild(bones[i].get());
 		}
 	//	bones[i]->visible = false;			
 	}
@@ -228,7 +228,7 @@ void Skeleton::addAnimation(const String& name, const String& fileName) {
 		//	Logger::log("activeBones: %d\n", activeBones);		
 		for(int j=0; j < activeBones; j++) {
 			OSBasics::read(&boneIndex, sizeof(unsigned int), 1, inFile);
-			BoneTrack *newTrack = new BoneTrack(bones[boneIndex], length);
+			BoneTrack* newTrack = new BoneTrack(bones[boneIndex].get(), length);
 			
 			BezierCurve *curve;
 			float vec1[2]; //,vec2[2],vec3[2];
@@ -452,7 +452,6 @@ void SkeletonAnimation::Play(bool once) {
 }
 
 SkeletonAnimation::~SkeletonAnimation() {
-
 }
 
 const String& SkeletonAnimation::getName() const {
@@ -460,5 +459,5 @@ const String& SkeletonAnimation::getName() const {
 }
 
 void SkeletonAnimation::addBoneTrack(BoneTrack *boneTrack) {
-	boneTracks.push_back(boneTrack);
+	boneTracks.push_back(SmartPtr<BoneTrack>(boneTrack));
 }

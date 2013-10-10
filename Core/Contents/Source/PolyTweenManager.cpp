@@ -30,7 +30,8 @@ TweenManager::TweenManager() {
 }
 
 TweenManager::~TweenManager() {
-
+	for(int i = 0; i < tweens.size(); i++)
+		delete tweens[i];
 }
 
 void TweenManager::addTween(Tween *tween) {
@@ -40,6 +41,7 @@ void TweenManager::addTween(Tween *tween) {
 void TweenManager::removeTween(Tween *tween) {
 	for(int i=0; i < tweens.size(); i++) {
 		if(tweens[i] == tween) {
+			delete tween;
 			tweens.erase(tweens.begin()+i);
 			return;
 		}

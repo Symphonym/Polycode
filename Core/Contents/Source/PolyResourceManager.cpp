@@ -62,8 +62,6 @@ ResourceManager::~ResourceManager() {
 				delete resources[i];
 				--i;
 			}
-			else
-				++skippedResources;
 		}
 
 		for(int i=0; i < resources.size(); i++)	{
@@ -71,8 +69,6 @@ ResourceManager::~ResourceManager() {
 				delete resources[i];
 				--i;
 			}
-			else
-				++skippedResources;
 		}
 
 		for(int i=0; i < resources.size(); i++)	{
@@ -80,11 +76,7 @@ ResourceManager::~ResourceManager() {
 				delete resources[i];
 				--i;
 			}
-			else
-				++skippedResources;
 		}
-
-		printf("Resource manager did not delete %i resources.", skippedResources);
 
 		resources.clear();
 }

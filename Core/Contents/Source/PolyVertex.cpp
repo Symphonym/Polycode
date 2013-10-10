@@ -56,7 +56,7 @@ Vertex::Vertex(Number x, Number y, Number z, Number u, Number v) : Vector3(x,y,z
 }
 
 void Vertex::addBoneAssignment(unsigned int boneID, Number boneWeight) {
-	BoneAssignment *newBas = new BoneAssignment();
+	SmartPtr<BoneAssignment> newBas(new BoneAssignment(), "Bone Assignment");
 	newBas->boneID = boneID;
 	if(boneWeight > 1)
 		boneWeight = 1;
@@ -93,7 +93,7 @@ int Vertex::getNumBoneAssignments() {
 }
 
 BoneAssignment *Vertex::getBoneAssignment(unsigned int index) {
-	return boneAssignments[index];
+	return boneAssignments[index].get();
 }
 
 Vertex::~Vertex() {

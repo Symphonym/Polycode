@@ -27,6 +27,7 @@ THE SOFTWARE.
 #include "PolyColor.h"
 #include "PolyVector3.h"
 #include "PolyQuaternion.h"
+#include "PolySmartPtr.h"
 #include "PolyEntity.h"
 #include <vector>
 
@@ -127,7 +128,7 @@ namespace Polycode {
 			
 			String name;
 			Number duration;
-			std::vector<BoneTrack*> boneTracks;
+			std::vector<SmartPtr<BoneTrack> > boneTracks;
 	};
 
 	/**
@@ -222,11 +223,11 @@ namespace Polycode {
 		
 		protected:
 		
-			Entity *bonesEntity;
+			SmartPtr<Entity> bonesEntity;
 		
 			SkeletonAnimation *currentAnimation;
-			std::vector<Bone*> bones;
-			std::vector<SkeletonAnimation*> animations;
+			std::vector<SmartPtr<Bone> > bones;
+			std::vector<SmartPtr<SkeletonAnimation> > animations;
 	};
 
 }
