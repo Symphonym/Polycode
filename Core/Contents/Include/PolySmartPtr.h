@@ -26,94 +26,146 @@
 	
 namespace Polycode {
 	
+
+
 	/**
 	* A wrapper for pointers, using reference counting
 	*/
 	template<typename TType> class _PolyExport SmartPtr : public PolyBase {
+
 		public:
 			
 
-			SmartPtr() : data(NULL) {
-				data = new SharedData();
-				data->name = "No Name";
-				data->pointer = NULL;
-				data->referenceCount = 1;
+			SmartPtr() : pointer(NULL) {
+				referenceCount = new int(1);
+				name = "No Name";
 			}
 			/**
 			* Wraps pointer 'ptr', deleting it when the wrapper is destroyed
 			* @param ptr Pointer to be wrapped
 			* @param ptrName Optional name to be given to the pointer
 			*/					
-			SmartPtr(TType *ptr, String ptrName = "No Name") : data(NULL) {
-				data = new SharedData();
-				data->name = ptrName;
-				data->pointer = ptr;
-				data->referenceCount = 1;
+			SmartPtr(TType *ptr, String ptrName = "No Name") : pointer(ptr), name(ptrName) {
+				referenceCount = new int(1);
 			}
 			/**
 			* Shares ownership between two pointers
 			* @param rhPtr Pointer to share ownership with
 			*/		
-			SmartPtr(const SmartPtr& rhPtr) : data(NULL) {
-				this->data = rhPtr.data;
-				++data->referenceCount;
+			SmartPtr(const SmartPtr& rhPtr) : pointer(NULL), referenceCount(NULL){
+				pointer = rhPtr.pointer;
+				name = rhPtr.name;
+				referenceCount = rhPtr.referenceCount;
+				++*referenceCount;
 			}
 			~SmartPtr(){
-				--data->referenceCount;
-				if(data->referenceCount == 0)
+				--*referenceCount;
+				if(*referenceCount == 0)
 				{
-					delete data->pointer;
-					delete data;
+					delete pointer;
+					delete referenceCount;
+					pointer = NULL;
 				}
 			}
 
 			SmartPtr& operator = (const SmartPtr& rhPtr) {
 
-				if(this != &rhPtr){
-					--data->referenceCount;
+				if(pointer != rhPtr.pointer){
+					--*referenceCount;
 
-					if(data->referenceCount == 0)
+					if(*referenceCount == 0)
 					{
-						delete data->pointer;
-						delete data;
+						delete pointer;
+						delete referenceCount;
+						pointer = NULL;
 					}
 
-					data = rhPtr.data;
-					++data->referenceCount;
+					pointer = rhPtr.pointer;
+					name = rhPtr.name;
+					referenceCount = rhPtr.referenceCount;
+					++*referenceCount;
 				}
 
 				return *this;
 			}
+			SmartPtr& operator = (const std::pair<TType*, std::pair<int*, String> >& rhPtr) {
+
+				if(pointer != rhPtr.first){
+					--*referenceCount;
+
+					if(*referenceCount == 0)
+					{
+						delete pointer;
+						delete referenceCount;
+						pointer = NULL;
+					}
+
+					pointer = rhPtr.first;
+					name = rhPtr.second.second;
+					referenceCount = rhPtr.second.first;
+					++*referenceCount;
+				}
+
+				return *this;
+			}
+
 			TType* operator -> () {
-				return this->data->pointer;
+				return pointer;
+			}
+			const TType* operator -> () const{
+				return pointer;
 			}
 			TType& operator * () {
-				return *this->data->pointer;
+				return *pointer;
+			}
+			const TType& operator * () const{
+				return *pointer;
 			}
 
 			/**
 			* Returns the amount of pointers pointing to the underlying object
 			*/	
 			int getRefCount() const{
-				return data->referenceCount;
-			}/**
+				return *referenceCount;
+			}
+			/**
 			* Returns the name of the pointer, if given any
 			*/	
 			String getName() const{
-				return data->name;
+				return name;
+			}
+			/**
+			* Gets the underlying raw pointer
+			* @return The underlying pointer
+			*/	
+			TType* get() const{
+				return pointer;
+			}
+
+			/**
+			* Gets a copy handle to use when there is polymorphism involved. The template type should be equal to the
+			* type of the SmartPtr you're setting it equal to. Which will only work if THIS is derived from the other pointer.
+			* @return Copyhandle consisting of all internal data
+			*/
+			template<typename TTargetCopyType> std::pair<TTargetCopyType*, std::pair<int*, String> > getCopyHandle(){
+				return std::make_pair(pointer, std::make_pair(referenceCount, name));
 			}
 
 		private:
 
-			struct SharedData{
-				TType *pointer;
-				String name;
+			TType *pointer;
+			String name;
 
-				int referenceCount;
-			};
-
-			SharedData *data;
-
+			int *referenceCount;
 			
 	};
+
+	/**
+	* Returns the specified pointer as a SmartPtr
+	* @return A SmartPtr object with the specified pointer argument
+	*/
+	template<typename TPtrType> static SmartPtr<TPtrType> make_smart(TPtrType* ptr, String ptrName = "No Name"){
+		return SmartPtr<TPtrType>(ptr, ptrName);
+	}
+
 }

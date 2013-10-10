@@ -37,7 +37,7 @@ Bone::Bone(const String& boneName) : Entity() {
 	boneMatrix.identity();
 //	addChild(boneMesh);
 	
-	boneMesh = new Mesh(Mesh::QUAD_MESH);
+	boneMesh = make_smart(new Mesh(Mesh::QUAD_MESH), "Bone Mesh");
 	boneMesh->createBox(0.2,0.2,0.2);
 	
 }
@@ -146,10 +146,10 @@ void Bone::enableBoneLabel(const String& fontLabel, Number size, Number scale, C
 void Bone::Render() {
 
 	CoreServices::getInstance()->getRenderer()->setTexture(NULL);	
-//	renderer->pushDataArrayForMesh(boneMesh, RenderDataArray::COLOR_DATA_ARRAY);
-	renderer->pushDataArrayForMesh(boneMesh, RenderDataArray::VERTEX_DATA_ARRAY);
-	renderer->pushDataArrayForMesh(boneMesh, RenderDataArray::TEXCOORD_DATA_ARRAY);	
-	renderer->pushDataArrayForMesh(boneMesh, RenderDataArray::NORMAL_DATA_ARRAY);		
+//	renderer->pushDataArrayForMesh(boneMesh.get(), RenderDataArray::COLOR_DATA_ARRAY);
+	renderer->pushDataArrayForMesh(boneMesh.get(), RenderDataArray::VERTEX_DATA_ARRAY);
+	renderer->pushDataArrayForMesh(boneMesh.get(), RenderDataArray::TEXCOORD_DATA_ARRAY);	
+	renderer->pushDataArrayForMesh(boneMesh.get(), RenderDataArray::NORMAL_DATA_ARRAY);		
 	renderer->drawArrays(boneMesh->getMeshType());	
 
 }

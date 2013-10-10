@@ -58,6 +58,7 @@ SET(polycore_SRCS
     Source/PolySceneRenderTexture.cpp
     Source/PolySceneSound.cpp
     Source/PolyShader.cpp
+    Source/PolySineWave.cpp
     Source/PolySkeleton.cpp
     Source/PolySound.cpp
     Source/PolySoundManager.cpp
@@ -145,6 +146,7 @@ SET(polycore_HDRS
     Include/PolySceneRenderTexture.h
     Include/PolySceneSound.h
     Include/PolyShader.h
+    Include/PolySineWave.h
     Include/PolySkeleton.h
     Include/PolySmartPtr.h
     Include/PolySound.h

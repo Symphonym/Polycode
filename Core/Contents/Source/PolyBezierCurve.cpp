@@ -53,22 +53,19 @@ void BezierCurve::clearControlPoints() {
 	}
 	
 	buffersDirty = true;
-	for(int i=0; i < controlPoints.size(); i++) {
-		delete controlPoints[i];
-	}
 	controlPoints.clear();
 }
 
 BezierCurve::~BezierCurve() {
-
+	clearControlPoints();
 }
 
 void BezierCurve::addControlPoint(Number p1x, Number p1y, Number p1z, Number p2x, Number p2y, Number p2z, Number p3x, Number p3y, Number p3z) {
-	BezierPoint* newPoint = new BezierPoint(p1x, p1y, p1z, p2x, p2y, p2z, p3x, p3y, p3z);
+	SmartPtr<BezierPoint> newPoint(new BezierPoint(p1x, p1y, p1z, p2x, p2y, p2z, p3x, p3y, p3z), "BezierPoint");
 	
 	bool inserted = false;
 	for(int i=0; i < controlPoints.size(); i++) {
-		if(controlPoints[i] == insertPoint) {
+		if(controlPoints[i].get() == insertPoint) {
 			controlPoints.insert(controlPoints.begin()+i, newPoint);
 			inserted = true;
 			break;
@@ -111,10 +108,10 @@ void BezierCurve::recalculateDistances() {
 		
 	Vector3 point, lastPoint;
 	for(int i=0; i < controlPoints.size()-1; i++) {
-		lastPoint = getPointBetween(0, controlPoints[i], controlPoints[i+1]);
+		lastPoint = getPointBetween(0, controlPoints[i].get(), controlPoints[i+1].get());
 		dist = 0;
 		for(Number a=0.0f; a < 1.0f; a += 0.01) {
-			point = getPointBetween(a, controlPoints[i], controlPoints[i+1]);
+			point = getPointBetween(a, controlPoints[i].get(), controlPoints[i+1].get());
 			dist += point.distance(lastPoint);
 			lastPoint = point;
 		}
@@ -141,7 +138,7 @@ Vector3 BezierCurve::getPointBetween(Number a, BezierPoint *bp1, BezierPoint *bp
 }
 
 BezierPoint *BezierCurve::getControlPoint(unsigned int index) {
-	return controlPoints[index];
+	return controlPoints[index].get();
 } 
 
 unsigned int BezierCurve::getNumControlPoints() {
@@ -150,8 +147,7 @@ unsigned int BezierCurve::getNumControlPoints() {
 
 void BezierCurve::removePoint(BezierPoint *point) {
 	for(int i=0; i < controlPoints.size(); i++) {
-		if(controlPoints[i] == point) {
-			delete point;
+		if(controlPoints[i].get() == point) {
 			controlPoints.erase(controlPoints.begin() + i);
 			break;
 		}
@@ -205,7 +201,7 @@ Vector3 BezierCurve::getPointAt(Number a) {
 	Vector3 retVector;
 	for(int i=0; i < controlPoints.size()-1; i++) {
 		if(a >= distances[i] && a <= distances[i+1]) {
-			retVector = getPointBetween(1.0f-((a-distances[i])/(distances[i+1]-distances[i])), controlPoints[i], controlPoints[i+1]);
+			retVector = getPointBetween(1.0f-((a-distances[i])/(distances[i+1]-distances[i])), controlPoints[i].get(), controlPoints[i+1].get());
 		}
 	}
 	return retVector;

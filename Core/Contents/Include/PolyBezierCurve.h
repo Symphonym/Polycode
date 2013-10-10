@@ -26,6 +26,7 @@
 
 #include "PolyGlobals.h"
 #include "PolyVector3.h"
+#include "PolySmartPtr.h"
 #include <vector>
 
 
@@ -180,7 +181,7 @@ namespace Polycode {
 
 		BezierPoint *insertPoint;
 
-		std::vector<BezierPoint*> controlPoints;
+		std::vector<SmartPtr<BezierPoint> > controlPoints;
 		std::vector<Number> distances;
 		
 		void recalculateDistances();		

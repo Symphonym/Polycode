@@ -31,7 +31,7 @@
 
 using namespace Polycode;
 
-Tween::	Tween(Number *target, int easeType, Number startVal, Number endVal, Number time, bool repeat, bool deleteOnComplete, Number waitTime) : EventDispatcher() {
+Tween::Tween(Number *target, int easeType, Number startVal, Number endVal, Number time, bool repeat, bool deleteOnComplete, Number waitTime) : EventDispatcher() {
 	this->waitTime = waitTime;
 	this->deleteOnComplete = deleteOnComplete;
 	targetVal = target;
@@ -237,7 +237,7 @@ BezierPathTween::~BezierPathTween() {
 }
 
 QuaternionTween::QuaternionTween(Quaternion *target, BezierCurve *wCurve, BezierCurve *xCurve, BezierCurve *yCurve, BezierCurve *zCurve, int easeType, Number time, bool repeat) : Tween(&pathValue, easeType, 0.0f, 1.0f, time, repeat) {
-	this->quatCurve = new QuaternionCurve(wCurve, xCurve, yCurve, zCurve);		
+	this->quatCurve = make_smart(new QuaternionCurve(wCurve, xCurve, yCurve, zCurve), "Quaternion Tween");
 	this->target = target;
 	pathValue = 0;
 						

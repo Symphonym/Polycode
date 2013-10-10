@@ -24,6 +24,7 @@ THE SOFTWARE.
 #include "PolyGlobals.h"
 #include "PolyVector3.h"
 #include "PolyEventDispatcher.h"
+#include "PolySmartPtr.h"
 
 namespace Polycode {
 	
@@ -139,7 +140,6 @@ namespace Polycode {
 
 		protected:
 			Number pathValue;
-			Tween *pathTween;
 			BezierCurve *curve;
 			Vector3 *target;
 	};
@@ -152,8 +152,7 @@ namespace Polycode {
 			void updateCustomTween();
 		protected:
 			Number pathValue;
-			Tween *pathTween;
-			QuaternionCurve	*quatCurve;
+			SmartPtr<QuaternionCurve>	quatCurve;
 			Quaternion *target;			
 	};
 	

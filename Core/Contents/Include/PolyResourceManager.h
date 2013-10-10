@@ -23,6 +23,7 @@ THE SOFTWARE.
 
 #pragma once
 #include "PolyGlobals.h"
+#include "PolySmartPtr.h"
 #include <vector>
 
 #define RESOURCE_CHECK_INTERVAL	2000

@@ -41,7 +41,6 @@ MaterialManager::MaterialManager() {
 }
 
 MaterialManager::~MaterialManager() {
-	
 }
 
 void MaterialManager::Update(int elapsed) {
@@ -114,12 +113,12 @@ Texture *MaterialManager::createTextureFromFile(const String& fileName, bool cla
 		return newTexture;
 	}
 	
-	Image *image = new Image(fileName);
-	if(image->isLoaded()) {
+	Image image(fileName);
+	if(image.isLoaded()) {
 		if(premultiplyAlphaOnLoad) {
-			image->premultiplyAlpha();
+			image.premultiplyAlpha();
 		}
-		newTexture = createTexture(image->getWidth(), image->getHeight(), image->getPixels(), clamp, createMipmaps);
+		newTexture = createTexture(image.getWidth(), image.getHeight(), image.getPixels(), clamp, createMipmaps);
 		newTexture->setResourcePath(fileName);
 		CoreServices::getInstance()->getResourceManager()->addResource(newTexture);		
 	} else {
@@ -127,7 +126,6 @@ Texture *MaterialManager::createTextureFromFile(const String& fileName, bool cla
 		newTexture = getTextureByResourcePath(DEFAULT_TEXTURE);
 	}
 		
-	delete image;
 	return newTexture;
 }
 
