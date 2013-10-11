@@ -305,7 +305,7 @@ void Entity::addChild(Entity *newChild) {
 }
 
 void Entity::setColor(Color color) {
-	this->color.setColor(&color);
+	this->color.setColor(color);
 }
 
 void Entity::setColorInt(int r, int g, int b, int a) {

@@ -44,8 +44,8 @@ Color::Color(Number r,Number g, Number b, Number a) {
 	setColor(r,g,b,a);
 }
 
-Color::Color(const Color *color) {
-	setColor(color->r, color->g, color->b, color->a);
+Color::Color(const Color& color) {
+	setColor(color.r, color.g, color.b, color.a);
 }
 
 Color::Color(int r,int g, int b, int a) {
@@ -56,18 +56,8 @@ Color::Color(unsigned int hex) {
 	setColorHex(hex);
 }
 
-Color Color::ColorWithInts(int r,int g, int b, int a) {
-	return Color(r,g,b,a);
-}
-
-Color Color::ColorWithHex(unsigned int hex) {
-	return Color(hex);
-}
-
-
 void Color::setColorHexRGB(unsigned int hex) {
 
-//	int tr = (hex >> 24) & 0xFF;
 	int tr = (hex >> 16) & 0xFF;
 	int tg = (hex >> 8) & 0xFF;
 	int tb = (hex ) & 0xFF;
@@ -75,8 +65,6 @@ void Color::setColorHexRGB(unsigned int hex) {
 	r = ((Number)tr)/255.0f;
 	g = ((Number)tg)/255.0f;
 	b = ((Number)tb)/255.0f;
-//	a = ((Number)ta)/255.0f;	
-	
 }
 
 void Color::setColorHexFromString(String hex) {
@@ -174,26 +162,24 @@ void Color::RGBtoHSV(const Number &r, const Number &g, const Number &b, Number &
 
 
 Number Color::getHue() const {
-	Number h,s,v;
+	Number h = 0,s = 0,v = 0;
 	Color::RGBtoHSV(r,g,b, h,s,v);
 	return h;
 }
 
 Number Color::getSaturation() const {
-	Number h,s,v;
+	Number h = 0,s = 0,v = 0;
 	Color::RGBtoHSV(r,g,b, h,s,v);
 	return s;
 }
 
 Number Color::getValue() const {
-	Number h,s,v;
+	Number h = 0,s = 0,v = 0;
 	Color::RGBtoHSV(r,g,b, h,s,v);
 	return v;
 }
 
 void Color::setColorHSV(Number H, Number S, Number V) {
-	Number r,g,b;
-    
 	if (S == 0) {
         r = g = b = V;
     } else {
@@ -215,8 +201,11 @@ void Color::setColorHSV(Number H, Number S, Number V) {
 	setColor(r, g, b, a);
 }
 
-void Color::Random() {
+void Color::RandomRGB() {
 	setColor((Number)rand()/RAND_MAX, (Number)rand()/RAND_MAX, (Number)rand()/RAND_MAX, 1.0f);
+}
+void Color::RandomRGBA() {
+	setColor((Number)rand()/RAND_MAX, (Number)rand()/RAND_MAX, (Number)rand()/RAND_MAX, (Number)rand()/RAND_MAX);
 }
 
 void Color::setColorRGB(int r, int g, int b) {
@@ -232,19 +221,17 @@ void Color::setColorRGBA(int r, int g, int b, int a) {
 	this->a = ((Number)a)/255.0f;
 }
 
-void Color::setColor(const Color *color) {
-	this->r = color->r;
-	this->g = color->g;
-	this->b = color->b;
-	this->a = color->a;
-}
-
-
 void Color::setColor(Number r, Number g, Number b, Number a) {
 	this->r = r;
 	this->g = g;
 	this->b = b;
 	this->a = a;
+}
+void Color::setColor(const Color& color){
+	this->r = color.r;
+	this->g = color.g;
+	this->b = color.b;
+	this->a = color.a;
 }
 
 unsigned int Color::getUint() const {

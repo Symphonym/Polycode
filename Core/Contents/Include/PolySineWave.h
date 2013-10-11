@@ -38,17 +38,12 @@ namespace Polycode {
 			* Sets how long it should take between each full oscillation
 			* @param msTime Time between each oscillation, in milliseconds
 			*/
-			void setOscillationTime(Number msTime);
+			void setOscillationTime(int msTime);
 			/**
 			* Sets the amplitude of the sine wave, height between lowest and highest points
 			* @param amplitude Amplitude multiplier for the sine wave, is 1000 by default.
 			*/
 			void setAmplitude(Number amplitude);
-			/**
-			* Sets the frequency of the sine wave, i.e distance between oscillations
-			* @param frequency Frequency multiplier, is 1 by default.
-			*/
-			void setFrequency(Number frequency);
 
 			/**
 			* Sets the sine wave position to the lowest point of the wave, +amplitude
@@ -63,36 +58,28 @@ namespace Polycode {
 			*/
 			void setWaveStart();
 			/**
-			* Sets the sine wave position to the specified value
-			* @param position New position of the sine wave, in radians, must be lower than getWaveEnd()
-			* @param convertToRadians Optional switch if position is given in degrees, converts 'position' to radians if true
+			* Sets the sine wave position to the position where it would be X milliseconds into it's wave.
+			* @param msTime Time in milliseconds, must be less than oscillation time
 			*/
-			void setWavePosition(Number position, bool convertToRadians = false);
+			void setWavePosition(int msTime);
 
 			/**
 			* Updates the current value of the sine wave and returns the index of the wave.
 			* @return The index of the sine wave at it's current position, which will be within the range -amplitude to +amplitude.
 			*/		
 			Number getWaveValue();
-			/**
-			* Gets the current position of the wave, i.e its position x-wise
-			* @return The current x index of the sine wave
-			*/	
-			Number getWavePosition() const;
-			/**
-			* Gets the value of x when the wave ends
-			* @return The x value of the sine wave at the end of the wave, in radians
-			*/	
-			Number getWaveEnd() const;
 
 		private:
 
 			Number calculateSineIndex() const;
 
-			Number oscillationTime;
+			/**
+			* Time since oscillation started
+			*/
+			Number oscTimePassed;
+
+			int oscillationTime;
 			Number amplitude;
-			Number frequency;
-			Number wavePosition;
 			
 	};
 

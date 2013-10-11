@@ -75,7 +75,11 @@ namespace Polycode {
 			const static Color Transparent;
 
 
-	
+			/**
+			* Default constructor.
+			*/						
+			Color();
+
 			/**
 			* Create from 0-1 floating point data.
 			* @param r Red value 0-1.
@@ -84,11 +88,6 @@ namespace Polycode {
 			* @param a Alpha value 0-1									
 			*/														
 			Color(Number r,Number g, Number b, Number a);
-			
-			/**
-			* Default constructor.
-			*/						
-			Color();
 			
 			/**
 			* Create from 0-255 integer data.
@@ -103,7 +102,7 @@ namespace Polycode {
 			* Create from another color.
 			* @param color The color to create from.
 			*/												
-			Color(const Color *color);
+			Color(const Color& color);
 			
 			/**
 			* Create from integer color.
@@ -111,23 +110,16 @@ namespace Polycode {
 			*/															
 			Color(unsigned int hex);
 		
-			/**
-			* Create from 0-255 integer data.
-			* @param r Red value 0-255.
-			* @param g Green value 0-255.
-			* @param b Blue value 0-255.
-			* @param a Alpha value 0-255.									
-			*/		
-			static Color ColorWithInts(int r,int g, int b, int a);
-			
-			/**
-			* Create from integer color.
-			* @param hex Integer color value.
-			*/			
-			static Color ColorWithHex(unsigned int hex);
-		
 			virtual ~Color();
 			
+
+			inline Color& operator = (const Color& c2){
+				this->r = c2.r;
+				this->g = c2.g;
+				this->b = c2.b;
+				this->a = c2.a;
+			}
+
 			/** 
 			* Multiplies the color with another color.
 			*/
@@ -228,12 +220,12 @@ namespace Polycode {
 			* @param a Alpha value 0-1									
 			*/																	
 			void setColor(Number r, Number g, Number b, Number a);
-			
+
 			/**
-			* Set from another color.
-			* @param color The color to set from.
-			*/															
-			void setColor(const Color *color);
+			* Set color from other Color variable
+			* @param Color to copy data from
+			*/
+			void setColor(const Color& color);
 			
 			/**
 			* Returns a new color after blending the second color with specified blending mode. 
@@ -246,7 +238,11 @@ namespace Polycode {
 			/**
 			* Sets the color to a random color. This does not affect alpha.
 			*/
-			void Random();
+			void RandomRGB();
+			/**
+			* Sets the color to a random color, affecting alpha as well.
+			*/
+			void RandomRGBA();
 		
 			/**
 			* Retuns the brightness of the color
@@ -254,6 +250,15 @@ namespace Polycode {
 			*/
 			Number getBrightness() const;
 			
+			/**
+			* Converts RGB color values to HSV color values
+			* @param r Red value
+			* @param g Green value
+			* @param b Blue value
+			* @param h Variable to store Hue value in
+			* @param s Variable to store Saturation value in
+			* @param v Variable to store Value value in
+			*/
 			static void RGBtoHSV(const Number &r, const Number &g, const Number &b, Number &h, Number &s, Number &v);
 			
 			/**
@@ -276,7 +281,7 @@ namespace Polycode {
 
 			
 			/**
-			* Returns the color as a 32-bit usigned integer.
+			* Returns the color as a 32-bit unsigned integer.
 			* @return Color as a single 32-bit unsigned integer.
 			*/
 			unsigned int getUint() const;

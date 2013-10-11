@@ -24,73 +24,54 @@
 #include "PolyCoreServices.h"
 #include "PolyCore.h"
 #include <cmath>
- #include <iostream>
 
 namespace Polycode{
 
-	SineWave::SineWave() : oscillationTime(1000.f), amplitude(1), frequency(1), wavePosition(0){
+	SineWave::SineWave() : oscTimePassed(0), oscillationTime(1000), amplitude(1) {
 
 	}
 
-	void SineWave::setOscillationTime(Number msTime){
+	void SineWave::setOscillationTime(int msTime){
 		this->oscillationTime = msTime;
 	}
 	void SineWave::setAmplitude(Number amplitude){
 		this->amplitude = amplitude;
 	}
-	void SineWave::setFrequency(Number frequency){
-		this->frequency = frequency;
-	}
 
 	void SineWave::setWaveTop(){
-		// x = asin(1)/f
-
-		wavePosition = asin(1)/frequency;
+		// A = A*sin((oscPass/oscTotal)*(2*PI));
+		// 1 = sin((oscPass/oscTotal)*(2*PI));
+		// (sin-1(1)/(2*PI))*oscTotal = oscPass
+		oscTimePassed = (asin(1)/(2*PI))*oscillationTime;
 	}
 	void SineWave::setWaveBottom(){
-
-		// Just set position to wave top, and add half an oscillation
-		setWaveTop();
-		wavePosition += getWaveEnd() / 2;
+		// -A = A*sin((oscPass/oscTotal)*(2*PI));
+		// -1 = sin((oscPass/oscTotal)*(2*PI));
+		// (sin-1(-1)/(2*PI))*oscTotal = oscPass
+		oscTimePassed = (asin(-1)/(2*PI))*oscillationTime;
 	}
 	void SineWave::setWaveStart(){
-		wavePosition = 0;
+		oscTimePassed = 0;
 	}
-	void SineWave::setWavePosition(Number position, bool convertToRadians){
-
-		if(convertToRadians)
-			position *= TORADIANS;
-
-		if(position <= getWaveEnd())
-			wavePosition = position;
+	void SineWave::setWavePosition(int msTime){
+		if(msTime <= oscillationTime)
+			oscTimePassed = msTime;
 		else
-			wavePosition = 0;
+			oscTimePassed = 0;
 	}
 
 	Number SineWave::getWaveValue(){
 
-		Number tempIndex = calculateSineIndex();
+		oscTimePassed += CoreServices::getInstance()->getCore()->getElapsed()*1000.f;
 
-		// Update wave position
-		wavePosition += (CoreServices::getInstance()->getCore()->getElapsed()*0.001f)*getWaveEnd()*oscillationTime;
-
-		Number endOfWave = getWaveEnd();
-
-		// Wave has reached the end
-		if(wavePosition >= endOfWave){
-			wavePosition = wavePosition - endOfWave;
+		if(oscTimePassed >= oscillationTime){
+			oscTimePassed = oscTimePassed - oscillationTime;
 		}
 
-		return tempIndex;
-	}
-	Number SineWave::getWavePosition() const{
-		return wavePosition;
+		return calculateSineIndex();
 	}
 
 	Number SineWave::calculateSineIndex() const{
-		return amplitude*sin(frequency*wavePosition);
-	}
-	Number SineWave::getWaveEnd() const{
-		return ((2*PI)/frequency);
+		return amplitude*sin((oscTimePassed/oscillationTime)*(2*PI));
 	}
 };
