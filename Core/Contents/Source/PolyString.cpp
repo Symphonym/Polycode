@@ -110,12 +110,20 @@ void String::setDataWithEncoding(char *data, int encoding) {
 	}
 }
 
-bool String::isNumber() {
+bool String::isNumber() const {
 #ifdef _WINDOWS
 	return false;
 #else
     std::string::const_iterator it = contents.begin();
-    while (it != contents.end() && std::isdigit(*it)) ++it;
+    bool hasDot = false;
+    while ((it != contents.end() && std::isdigit(*it)) || // Allow digits
+    	(it != contents.end() && *it == '.' && !hasDot)) { // Allow a single dot
+    	if(*it == '.')
+    		hasDot = true;
+
+    	++it;
+    }
+    // String not empty and has looped whole string
     return !contents.empty() && it == contents.end();
 #endif
 }				

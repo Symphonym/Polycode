@@ -126,7 +126,7 @@ void BezierCurve::recalculateDistances() {
 	}
 }
 
-Vector3 BezierCurve::getPointBetween(Number a, BezierPoint *const bp1, BezierPoint *const bp2) const {
+Vector3 BezierCurve::getPointBetween(Number a, const BezierPoint *bp1, const BezierPoint *bp2) const {
 	Vector3 retVector;
 	Number b = 1.0f - a;
 	
@@ -137,7 +137,7 @@ Vector3 BezierCurve::getPointBetween(Number a, BezierPoint *const bp1, BezierPoi
 	return retVector;
 }
 
-BezierPoint *const BezierCurve::getControlPoint(unsigned int index) const {
+BezierPoint *BezierCurve::getControlPoint(unsigned int index) const {
 	return controlPoints[index].get();
 } 
 

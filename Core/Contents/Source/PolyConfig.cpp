@@ -45,8 +45,8 @@ void Config::loadConfig(const String& configNamespace, const String& fileName) {
 	
 	TiXmlElement *rootElement = doc.RootElement();
 	
-	TiXmlNode *pChild;
-	ConfigEntry *entry;
+	TiXmlNode *pChild = NULL;
+	ConfigEntry *entry = NULL;
 	for(pChild = rootElement->FirstChild(); pChild != 0; pChild = pChild->NextSibling()) {
 		TiXmlElement *pChildElement = pChild->ToElement();
 		if (!pChildElement) continue; // Skip comment nodes
@@ -62,6 +62,7 @@ void Config::loadConfig(const String& configNamespace, const String& fileName) {
 
 void Config::saveConfig(const String& configNamespace, const String& fileName) {
 
+	
 	TiXmlDocument doc;  
 	TiXmlElement* node;  
 	
@@ -88,18 +89,18 @@ void Config::saveConfig(const String& configNamespace, const String& fileName) {
 ConfigEntry *Config::getEntry(const String& configNamespace, const String& key) {
 	
 	for(int i=0; i < entries.size(); i++) {
-		ConfigEntry *entry = entries[i];
+		ConfigEntry *entry = entries[i].get();
 		if(entry->key == key && entry->configNamespace == configNamespace) {
 			return entry;
 		}
 	}
-	ConfigEntry *newEntry = new ConfigEntry();
+	SmartPtr<ConfigEntry> newEntry(new ConfigEntry());
 	newEntry->key = key;
 	newEntry->isString = false;
 	newEntry->numVal = 0;
 	newEntry->configNamespace = configNamespace;
 	entries.push_back(newEntry);
-	return newEntry;
+	return newEntry.get();
 }
 
 void Config::setStringValue(const String& configNamespace, const String& key, const String& value) {

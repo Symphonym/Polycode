@@ -138,7 +138,7 @@ namespace Polycode {
 			* @param index Index of the control point to return.
 			* @return Control point at specified index.
 			*/
-			BezierPoint *const getControlPoint(unsigned int index) const;
+			BezierPoint *getControlPoint(unsigned int index) const;
 			
 			/**
 			* Returns the total number of control points in the curve.
@@ -165,7 +165,7 @@ namespace Polycode {
 			* @param a Normalized (0-1) position between two points
 			* @return 3d point at specified position.
 			*/																				
-			Vector3 getPointBetween(Number a, BezierPoint *const bp1, BezierPoint *const bp2) const;
+			Vector3 getPointBetween(Number a, const BezierPoint *bp1, const BezierPoint *bp2) const;
 			
 			void clearControlPoints();
 			

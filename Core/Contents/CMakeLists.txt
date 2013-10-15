@@ -8,6 +8,7 @@ SET(polycore_SRCS
     Source/PolyCamera.cpp
     Source/PolyColor.cpp
     Source/PolyConfig.cpp
+    Source/PolyConfigNew.cpp
     Source/PolyCore.cpp
     Source/PolyCoreInput.cpp
     Source/PolyCoreServices.cpp
@@ -93,6 +94,7 @@ SET(polycore_HDRS
     Include/Polycode.h
     Include/PolyColor.h
     Include/PolyConfig.h
+    Include/PolyConfigNew.h
     Include/PolyCore.h
     Include/PolyCoreInput.h
     Include/PolyCoreServices.h

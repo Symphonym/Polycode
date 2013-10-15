@@ -121,7 +121,7 @@ namespace Polycode {
 			* @param pos Position of the last character in the string to be taken into consideration for possible matches. The default value indicates that the entire string is searched.
 			* @return The position of the last occurrence in the string of any of the characters searched for.
 			*/													
-			size_t find_last_of(const String& str, size_t pos = std::wstring::npos ) { return contents.find_last_of(str.contents, pos); }
+			size_t find_last_of(const String& str, size_t pos = std::wstring::npos ) const { return contents.find_last_of(str.contents, pos); }
 		
 			
 			/**
@@ -130,7 +130,7 @@ namespace Polycode {
 			* @param pos Position of the first character in the string to be taken into consideration for possible matches. The default value indicates that the entire string is searched.
 			* @return The position of the last occurrence in the string of any of the characters searched for.
 			*/			
-			size_t find_first_of(const String &str, size_t pos = 0) {
+			size_t find_first_of(const String &str, size_t pos = 0) const{
 				return contents.find_first_of(str.contents, pos); 
 			}
 		
@@ -229,7 +229,7 @@ namespace Polycode {
 			* Checks if the string is a number
 			* @return true if the string is a number
 			*/			
-			bool isNumber();
+			bool isNumber() const;
 
 			/**
 			* STL string version of the string.

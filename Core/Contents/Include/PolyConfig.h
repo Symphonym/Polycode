@@ -23,6 +23,7 @@ THE SOFTWARE.
 #pragma once
 #include "PolyGlobals.h"
 #include "PolyString.h"
+#include "PolySmartPtr.h"
 
 namespace Polycode {
 
@@ -94,7 +95,7 @@ namespace Polycode {
 		
 	private:
 		
-		std::vector<ConfigEntry*> entries;
+		std::vector<SmartPtr<ConfigEntry> > entries;
 		
 	};
 }
