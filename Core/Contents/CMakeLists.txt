@@ -63,9 +63,11 @@ SET(polycore_SRCS
     Source/PolySkeleton.cpp
     Source/PolySound.cpp
     Source/PolySoundManager.cpp
+    Source/PolyStopwatch.cpp
     Source/PolyString.cpp
     Source/PolyTexture.cpp
     Source/PolyThreaded.cpp
+    Source/PolyTime.cpp
     Source/PolyTimer.cpp
     Source/PolyTimerManager.cpp
     Source/PolyTween.cpp
@@ -153,9 +155,11 @@ SET(polycore_HDRS
     Include/PolySmartPtr.h
     Include/PolySound.h
     Include/PolySoundManager.h
+    Include/PolyStopwatch.h
     Include/PolyString.h
     Include/PolyTexture.h
     Include/PolyThreaded.h
+    Include/PolyTime.h
     Include/PolyTimer.h
     Include/PolyTimerManager.h
     Include/PolyTween.h
