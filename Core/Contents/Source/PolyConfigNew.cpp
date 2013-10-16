@@ -87,9 +87,10 @@ namespace Polycode {
 				// Discard comments partially on line
 				for(int i = 0; i < line.size(); i++){
 					if(line[i] == '#') {
-						Logger::log("Error loading config fille...\n");
-						Logger::log("Error (Line %i): Same line comments not supported.", lineNumber);
-						return false;
+						Logger::log("Warning trigged when loading config fille...\n");
+						Logger::log("Warning (Line %i): Same line comments not supported.\n", lineNumber);
+						line = line.substr(0, i);
+						break;
 					}
 				}
 
@@ -141,7 +142,7 @@ namespace Polycode {
 						entry->strValue = line.substr(startOfString+1, endOfString-(startOfString+1));
 					else{
 						Logger::log("Error loading config fille...\n");
-						Logger::log("Error (Line %i): Invalid value given.", lineNumber);
+						Logger::log("Error (Line %i): Invalid value given.\n", lineNumber);
 						return false;
 					}
 
@@ -153,7 +154,7 @@ namespace Polycode {
 			if(createdHeaders != endedHeaders){
 				String wordEnding = (createdHeaders-endedHeaders) > 1 ? "s are" : " is";
 				Logger::log("Error loading config fille...\n");
-				Logger::log("Error: %i header%s missing closing tags.", createdHeaders-endedHeaders, wordEnding.c_str());
+				Logger::log("Error: %i header%s missing closing tags.\n", createdHeaders-endedHeaders, wordEnding.c_str());
 				return false;
 			}
 
@@ -198,14 +199,17 @@ namespace Polycode {
 		}
 	}
 
-	ConfigEntryNew *ConfigNew::getEntry(const String& entryPath) const{
+	const ConfigEntryNew* ConfigNew::getEntry(const String& entryPath) const{
 		if(entryPath == "ROOT" || entryPath.contents.empty())
 			return rootEntry.get();
 		else
 			return getEntryRecursive(entryPath, rootEntry.get());
 	}
+ 	ConfigEntryNew* ConfigNew::getEntry(const String& entryPath){
+ 		return const_cast<ConfigEntryNew*>(static_cast<const ConfigNew*>(this)->getEntry(entryPath));	
+ 	}
 
-	ConfigEntryNew *ConfigNew::getEntryRecursive(const String& entryPath, ConfigEntryNew* currentEntry) const {
+	const ConfigEntryNew* ConfigNew::getEntryRecursive(const String& entryPath, const ConfigEntryNew* currentEntry) const {
 
 		std::vector<String> paths = convertPath(entryPath).split('/');
 		String desiredEntry = getPathSegment(entryPath, 0);
@@ -216,7 +220,7 @@ namespace Polycode {
 
 		for(int i = 0; i < currentEntry->entries.size(); i++){
 
-			ConfigEntryNew* subEntry = currentEntry->entries[i].get();
+			const ConfigEntryNew* subEntry = currentEntry->entries[i].get();
 
 			// Venture down another sub header
 			if(subEntry->name == desiredEntry && isMoreSubHeaders) {
@@ -281,7 +285,7 @@ namespace Polycode {
 			entry->entries.push_back(newHeader);
 		}		
 	}
-	ConfigEntryNew* ConfigNew::createHeader(const String& entryPath){
+	void ConfigNew::createHeader(const String& entryPath){
 		createHeaderRecursive(convertPath(entryPath), rootEntry.get(), 0);		
 	}
 	void ConfigNew::createHeaderRecursive(const String& entryPath, ConfigEntryNew* entry, int subPath){
@@ -344,27 +348,27 @@ namespace Polycode {
 
 
 	Number ConfigNew::getNumber(const String& entryPath) const {
-		ConfigEntryNew* entry = getEntry(convertPath(entryPath));
 		String path = convertPath(entryPath);
+		const ConfigEntryNew* entry = getEntry(path);
 		if(entry == NULL){
 			Logger::log("Error accessing config file...\n");
 			Logger::log("Error: Could not find Number '%s' at the path %s.\n", getPathSegment(path, -1).c_str(), path.c_str());
 			throw EntryNotFoundException();
 		}
 		else
-			return getEntry(path)->numValue;
+			return entry->numValue;
 	}
 
 	const String& ConfigNew::getString(const String& entryPath) const {
-		ConfigEntryNew* entry = getEntry(convertPath(entryPath));
 		String path = convertPath(entryPath);
+		const ConfigEntryNew* entry = getEntry(path);
 		if(entry == NULL){
 			Logger::log("Error accessing config file...\n");
 			Logger::log("Error: Could not find String '%s' at the path %s.\n", getPathSegment(path, -1).c_str(), path.c_str());
 			throw EntryNotFoundException();
 		}
 		else
-			return getEntry(path)->strValue;
+			return entry->strValue;
 	}
 
 	String ConfigNew::getPathSegment(const String& entryPath, int index) const {

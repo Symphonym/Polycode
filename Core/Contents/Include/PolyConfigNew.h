@@ -84,8 +84,9 @@ namespace Polycode {
 		/**
 		* Retrieves an entry from the already loaded config file with a path. I.e "Polycode/Window" will retrieve the Window entry within the Polycode header.
 		* @param entryPath Path to the entry within the config file, each subheader is specified by adding a '/'.
+		* @return The entry at the specified path, returns NULL if it was not found
 		*/
-		ConfigEntryNew *getEntry(const String& entryPath) const;
+		const ConfigEntryNew* getEntry(const String& entryPath) const;
 
 		/**
 		* Modifies or creates a number variable within the loaded config file, by specifying its location and new value
@@ -104,9 +105,8 @@ namespace Polycode {
 		/**
 		* Creates a new header at within the config file at the specified path
 		* @param entryPath Path to the variable, including the name of the new header
-		* @return The newly created header
 		*/	
-		ConfigEntryNew* createHeader(const String& entryPath);
+		void createHeader(const String& entryPath);
 
 		/**
 		* Returns the numeric value of the config entry stored at the specified path
@@ -126,8 +126,10 @@ namespace Polycode {
 			EntryNotFoundException() : std::runtime_error("Error: ConfigEntry not found, null exception imminent, shutting down!"){};
 		};
 
+		// Only allow the parser to gain direct access to entries
+		ConfigEntryNew *getEntry(const String& entryPath);
 
-		ConfigEntryNew *getEntryRecursive(const String& entryPath, ConfigEntryNew* currentEntry) const;
+		const ConfigEntryNew *getEntryRecursive(const String& entryPath, const ConfigEntryNew* currentEntry) const;
 		void saveConfigRecursive(std::ofstream& writer, ConfigEntryNew* entry, int indention);
 		void createHeaderRecursive(const String& entryPath, ConfigEntryNew* entry, int subPath);
 
