@@ -55,7 +55,10 @@ namespace Polycode{
 	}
 
 	Time Stopwatch::getElapsedTime() const {
-		return Time::Milliseconds((getElapsedTimeSinceStart() - elapsedStart) - elapsedPaused);
+		if(isTimerPaused)
+			return Time::Milliseconds((getElapsedTimeSinceStart() - elapsedStart) - (elapsedPaused + (getElapsedTimeSinceStart()-elapsedPausedStart)));
+		else
+			return Time::Milliseconds((getElapsedTimeSinceStart() - elapsedStart) - elapsedPaused);
 	}
 
 	bool Stopwatch::isPaused() const{

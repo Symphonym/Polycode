@@ -21,8 +21,6 @@
 */
 
 #include "PolyTime.h"
-#include "PolyCore.h"
-#include "PolyCoreServices.h"
 
 namespace Polycode{
 

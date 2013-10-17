@@ -46,7 +46,7 @@ namespace Polycode {
 		std::ifstream reader(filePath.c_str(), std::ifstream::in);
 
 		if(!reader.is_open()){
-			Logger::log("Error loading config fille...\n");
+			Logger::log("Error loading config file...\n");
 			Logger::log("Error: Could not open file %s\n", filePath.c_str());
 			return false;
 		}
@@ -117,6 +117,13 @@ namespace Polycode {
 				}
 				// Find config entry
 				else if(equalSign != std::string::npos){
+
+					// Make sure parent is a header and not a variable
+					if(parent->type != ConfigEntryNew::CONFIG_HEADER){
+						Logger::log("Error loading config fille...\n");
+						Logger::log("Error (Line %i): Can't add subentries to non-header entry.\n", lineNumber);
+						return false;
+					}
 
 					SmartPtr<ConfigEntryNew> entry(new ConfigEntryNew());
 					entry->parentEntry = parent;

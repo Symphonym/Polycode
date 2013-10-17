@@ -23,12 +23,11 @@ THE SOFTWARE.
 
 #pragma once
 #include "PolyGlobals.h"
-#include "PolyEventDispatcher.h"
 
 namespace Polycode {
 	
 	/** 
-	* A Stopwatch to measure time elapsed between two points in the program.
+	* A utility class to manage Time
 	*/ 
 	class _PolyExport Time : public PolyBase {
 		public:

@@ -56,13 +56,17 @@ namespace Polycode {
 			void Restart();
 			
 			/**
-			* Returns the time elapsed in floating point microseconds.
+			* Returns the elapsed time
+			* @return The elapsed time wrapped in a Time object
 			*/
 			Time getElapsedTime() const;		
 
 		protected:
 			
-			// Retrieves elapsed time since arbitrary system specific time
+			/**
+			* Returns elapsed time in milliseconds since the program started
+			* @return Elapsed time in milliseconds
+			*/
 			int getElapsedTimeSinceStart() const;
 
 			int elapsedPaused; // How long the Stopwatch has been paused
